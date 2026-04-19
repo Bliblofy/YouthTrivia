@@ -1,15 +1,19 @@
 <script lang="ts">
 	import type { TriviaEntry } from '$lib/trivia';
-	import { searchTrivia } from '$lib/trivia';
+	import { searchTrivia, searchTriviaInList, triviaDatabase } from '$lib/trivia';
 
 	let {
-		onselect
+		onselect,
+		triviaList
 	}: {
 		onselect: (entry: TriviaEntry) => void;
+		triviaList?: TriviaEntry[];
 	} = $props();
 
 	let query = $state('');
-	let results = $derived(searchTrivia(query));
+	let results = $derived(
+		triviaList ? searchTriviaInList(query, triviaList) : searchTrivia(query)
+	);
 	let isOpen = $state(false);
 	let highlightedIndex = $state(-1);
 
@@ -56,8 +60,10 @@
 		}, 150);
 	}
 
-	function getLanguageFlag(lang: 'en' | 'de'): string {
-		return lang === 'en' ? '🇬🇧' : '🇩🇪';
+	function getLanguageFlag(lang: 'en' | 'de' | 'ch'): string {
+		if (lang === 'en') return '🇬🇧';
+		if (lang === 'ch') return '🇨🇭';
+		return '🇩🇪';
 	}
 </script>
 
