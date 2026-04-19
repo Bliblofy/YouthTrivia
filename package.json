@@ -38,6 +38,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@sveltejs/adapter-vercel": "^6.3.3"
+    "@neondatabase/serverless": "^1.1.0",
+    "@sveltejs/adapter-vercel": "^6.3.3",
+    "@vercel/postgres": "^0.10.0"
   }
 }

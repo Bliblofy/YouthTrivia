@@ -32,6 +32,9 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
+# Vercel
+.vercel/
+
 # Editor & OS
 .DS_Store
 Thumbs.db

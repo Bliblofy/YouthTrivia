@@ -383,3 +383,28 @@ export function searchTrivia(query: string): TriviaEntry[] {
 export function getTriviaById(id: string): TriviaEntry | undefined {
 	return triviaDatabase.find(entry => entry.id === id);
 }
+
+export function mergeTrivia(dbEntries: TriviaEntry[], fallbackEntries: TriviaEntry[] = triviaDatabase): TriviaEntry[] {
+	const dbIds = new Set(dbEntries.map(e => e.id));
+	const filteredFallback = fallbackEntries.filter(e => !dbIds.has(e.id));
+	return [...dbEntries, ...filteredFallback];
+}
+
+export function searchTriviaInList(query: string, entries: TriviaEntry[]): TriviaEntry[] {
+	if (!query.trim()) return [];
+	
+	const normalizedQuery = query.toLowerCase().trim();
+	
+	return entries
+		.filter(entry => 
+			entry.term.toLowerCase().includes(normalizedQuery) ||
+			entry.meaning.toLowerCase().includes(normalizedQuery)
+		)
+		.sort((a, b) => {
+			const aStartsWith = a.term.toLowerCase().startsWith(normalizedQuery);
+			const bStartsWith = b.term.toLowerCase().startsWith(normalizedQuery);
+			if (aStartsWith && !bStartsWith) return -1;
+			if (!aStartsWith && bStartsWith) return 1;
+			return a.term.localeCompare(b.term);
+		});
+}
