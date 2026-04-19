@@ -161,7 +161,7 @@
 						<h3>Production</h3>
 						<p>Live on the internet</p>
 						<div class="flow-features">
-							<span class="feature success">your-app.vercel.app</span>
+							<span class="feature success">demo.thauptmann.ch</span>
 						</div>
 					</div>
 				</div>

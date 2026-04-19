@@ -11,7 +11,7 @@
 
 	let score = 0;
 
-	const questions = $derived(data.questions ?? []);
+	const questions = $derived(data.quiz ?? []);
 	const currentQuestion = $derived(questions[currentIndex]);
 	const progress = $derived(
 		questions.length > 0 ? Math.round((currentIndex / questions.length) * 100) : 0
