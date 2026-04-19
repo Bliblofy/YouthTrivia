@@ -1,0 +1,148 @@
+---
+description: Constrain all AI-generated code to Svelte 5 exclusively—runes-first reactivity, snippet-based slots, callback props, and modern SvelteKit 2 conventions. Prevents regression to Svelte 3/4 patterns.
+globs: ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"]
+alwaysApply: true
+---
+
+# Svelte 5 Only
+
+All generated code must use **Svelte 5** idioms. Never emit Svelte 3/4 patterns.
+
+## Runes-First Reactivity (Mandatory)
+
+Use runes for all reactive logic:
+
+| Rune | Purpose |
+|------|---------|
+| `$state` | Reactive state |
+| `$state.raw` | Non-deeply-reactive state |
+| `$derived` | Computed values (expression) |
+| `$derived.by` | Computed values (function body) |
+| `$effect` | Side effects |
+| `$effect.pre` | Pre-DOM-update effects |
+| `$props` | Component props |
+| `$bindable` | Two-way bindable props |
+| `$inspect` | Dev-time debugging |
+| `$host` | Custom element host reference |
+
+```svelte
+// ✅ GOOD
+let count = $state(0);
+let doubled = $derived(count * 2);
+
+// ❌ BAD — never use
+let count = 0;
+$: doubled = count * 2;
+```
+
+## Component API (Mandatory)
+
+### Props
+
+```svelte
+// ✅ GOOD
+let { foo, bar = 'default', ...rest } = $props();
+
+// ✅ GOOD — typed
+let { foo }: { foo: string } = $props();
+
+// ❌ BAD — never use
+export let foo;
+```
+
+### Events — Use Callback Props
+
+```svelte
+// ✅ GOOD — callback prop
+let { onclick } = $props();
+<button onclick={onclick}>Click</button>
+
+// ❌ BAD — never use
+import { createEventDispatcher } from 'svelte';
+const dispatch = createEventDispatcher();
+<button on:click={() => dispatch('click')}>Click</button>
+```
+
+### Event Attribute Syntax
+
+```svelte
+// ✅ GOOD
+<button onclick={handleClick}>
+
+// ❌ BAD
+<button on:click={handleClick}>
+```
+
+### Slots → Snippets
+
+Replace `<slot />` with snippets and `{@render}`:
+
+```svelte
+// ✅ GOOD
+<script>
+  import type { Snippet } from 'svelte';
+  let { children }: { children: Snippet } = $props();
+</script>
+
+{@render children?.()}
+
+// ❌ BAD — never use
+<slot />
+```
+
+Named slots become named snippet props:
+
+```svelte
+// ✅ GOOD
+let { header, children }: { header?: Snippet; children: Snippet } = $props();
+
+{@render header?.()}
+{@render children()}
+```
+
+## Lifecycle & Stores
+
+- Prefer `$effect` over `onMount` / `beforeUpdate` / `afterUpdate`.
+- `onMount` and `onDestroy` remain available but are not the default choice.
+- For shared state, export `$state` objects from `.svelte.js` / `.svelte.ts` modules instead of creating new `writable` / `readable` stores.
+
+```typescript
+// ✅ GOOD — shared rune state (counter.svelte.ts)
+export const counter = $state({ value: 0 });
+
+// ❌ BAD — new store
+import { writable } from 'svelte/store';
+export const counter = writable(0);
+```
+
+Existing stores may be consumed; do not introduce new ones.
+
+## Tooling & Versions
+
+- Target **svelte@^5**.
+- If SvelteKit is present, target **@sveltejs/kit@^2**.
+- Use **Vite** as the bundler (do not suggest Rollup configs).
+- Use `.svelte` for markup components.
+- Use `.svelte.js` / `.svelte.ts` for rune-powered logic modules.
+
+## Hard Prohibitions
+
+Never generate any of the following:
+
+| Prohibited | Replacement |
+|------------|-------------|
+| `export let` | `$props()` |
+| `$:` reactive statements | `$derived` / `$derived.by` / `$effect` |
+| `<slot />` / `<slot name="x">` | `{@render children()}` / snippet props |
+| `on:event` | `onevent` attribute |
+| `createEventDispatcher` | Callback props |
+| `$$props` | `$props()` with rest |
+| `$$restProps` | `...rest` from `$props()` |
+| `$$slots` | Check snippet prop existence |
+| `beforeUpdate` / `afterUpdate` | `$effect.pre` / `$effect` |
+| `<svelte:component this={...}>` | Render component directly |
+
+## Behavior When Ambiguous
+
+1. **Svelte 3/4 code pasted**: Silently migrate to Svelte 5 idioms and briefly note changes.
+2. **Request not possible in Svelte 5**: State explicitly rather than falling back to legacy syntax.

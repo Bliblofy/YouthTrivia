@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/start-dev-server.sh",
+        "matcher": "\\.(svelte|ts|js|css|html)$",
+        "timeout": 10
+      }
+    ]
+  }
+}

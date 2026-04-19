@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Build output
+/build
+/.svelte-kit
+/package
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Test artifacts
+/coverage
+/playwright-report
+/test-results
+/blob-report
+
+# Cursor hook artifacts
+.cursor/hooks/.dev-server.pid
+.cursor/hooks/dev-server.log
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor & OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youth Trivia - HTML5 Version</title>
+    <meta name="description" content="Learn the meaning of youth slang and Gen Z expressions in English and German - Pure HTML5 + CSS Version">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #fdf2f8 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        /* Banner Styles */
+        .banner {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+            color: white;
+        }
+
+        .banner-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .banner-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .banner-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .banner-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .banner-description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: inherit;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .back-link svg {
+            width: 0.875rem;
+            height: 0.875rem;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-content h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 0 0 0.75rem;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f97316 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-emoji {
+            -webkit-text-fill-color: initial;
+        }
+
+        .tagline {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 3rem;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            background: #ffffff;
+            color: #1f2937;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .hint {
+            text-align: center;
+            margin: 1rem 0 0;
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .static-note {
+            text-align: center;
+            margin: 0.5rem 0 0;
+            font-size: 0.75rem;
+            color: #f97316;
+            font-style: italic;
+        }
+
+        /* Featured Section */
+        .featured-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        h2 {
+            margin: 0 0 0.25rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .section-description {
+            margin: 0 0 1.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .featured-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.25rem 1rem;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-4px);
+            border-color: #8b5cf6;
+            box-shadow: 0 12px 20px -5px rgba(139, 92, 246, 0.2);
+        }
+
+        .featured-flag {
+            font-size: 1.5rem;
+        }
+
+        .featured-term {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            text-align: center;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .category-group h3 {
+            margin: 0 0 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .term-chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #7c3aed;
+            background: #ede9fe;
+            border: none;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .chip:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .chip-german {
+            color: #db2777;
+            background: #fce7f3;
+        }
+
+        .chip-german:hover {
+            background: #ec4899;
+            color: white;
+        }
+
+        /* Term Details Section */
+        .term-details {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .term-details h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .term-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .term-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .term-card-flag {
+            font-size: 1.5rem;
+        }
+
+        .term-card-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .term-card-meaning {
+            margin: 0 0 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .term-card-example {
+            margin: 0;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-style: italic;
+            line-height: 1.5;
+            color: #4b5563;
+            background: #f9fafb;
+            border-left: 3px solid #8b5cf6;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        @media (max-width: 640px) {
+            main {
+                padding: 1.5rem 1rem 3rem;
+            }
+
+            .hero-content h1 {
+                flex-wrap: wrap;
+            }
+
+            .featured-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .banner-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .banner-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="banner-content">
+            <div class="banner-info">
+                <svg class="banner-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+                <span class="banner-label">HTML5 + CSS Version</span>
+                <span class="banner-description">Static File - No JavaScript</span>
+            </div>
+            <a href="/" class="back-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+    <main>
+        <header class="hero">
+            <div class="hero-content">
+                <h1>
+                    <span class="hero-emoji">🔥</span>
+                    Youth Trivia
+                    <span class="hero-emoji">💬</span>
+                </h1>
+                <p class="tagline">Decode Gen Z slang in English & German</p>
+            </div>
+        </header>
+
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" placeholder="Search youth slang (e.g., shotgun, cringe, digga...)" class="search-input" disabled>
+                </div>
+                <p class="hint">33 slang terms available</p>
+                <p class="static-note">Search is disabled in the static HTML version - scroll down to browse all terms</p>
+            </div>
+        </section>
+
+        <section class="featured-section">
+            <h2>Featured Slang</h2>
+            <p class="section-description">Click any card to jump to its definition below</p>
+            
+            <div class="featured-grid">
+                <a href="#shotgun" class="featured-card">
+                    <span class="featured-flag">🇬🇧</span>
+                    <span class="featured-term">Shotgun</span>
+                </a>
+                <a href="#cringe" class="featured-card">
+                    <span class="featured-flag">🇩🇪</span>
+                    <span class="featured-term">Cringe</span>
+                </a>
+                <a href="#rizz" class="featured-card">
+                    <span class="featured-flag">🇬🇧</span>
+                    <span class="featured-term">Rizz</span>
+                </a>
+                <a href="#sheesh" class="featured-card">
+                    <span class="featured-flag">🇩🇪</span>
+                    <span class="featured-term">Sheesh</span>
+                </a>
+                <a href="#bussin" class="featured-card">
+                    <span class="featured-flag">🇬🇧</span>
+                    <span class="featured-term">Bussin</span>
+                </a>
+                <a href="#ehrenmann" class="featured-card">
+                    <span class="featured-flag">🇩🇪</span>
+                    <span class="featured-term">Ehrenmann</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="categories-section">
+            <h2>Browse by Language</h2>
+            <div class="category-buttons">
+                <div class="category-group">
+                    <h3>🇬🇧 English Slang</h3>
+                    <div class="term-chips">
+                        <a href="#shotgun" class="chip">Shotgun</a>
+                        <a href="#no-cap" class="chip">No Cap</a>
+                        <a href="#slay" class="chip">Slay</a>
+                        <a href="#bussin" class="chip">Bussin</a>
+                        <a href="#lowkey" class="chip">Lowkey</a>
+                        <a href="#bet" class="chip">Bet</a>
+                        <a href="#salty" class="chip">Salty</a>
+                        <a href="#ghosting" class="chip">Ghosting</a>
+                        <a href="#vibe-check" class="chip">Vibe Check</a>
+                        <a href="#sus" class="chip">Sus</a>
+                        <a href="#rizz" class="chip">Rizz</a>
+                        <a href="#simp" class="chip">Simp</a>
+                        <a href="#fomo" class="chip">FOMO</a>
+                        <a href="#yeet" class="chip">Yeet</a>
+                        <a href="#goat" class="chip">GOAT</a>
+                    </div>
+                </div>
+                <div class="category-group">
+                    <h3>🇩🇪 German Slang</h3>
+                    <div class="term-chips">
+                        <a href="#cringe" class="chip chip-german">Cringe</a>
+                        <a href="#isso" class="chip chip-german">Isso</a>
+                        <a href="#digga" class="chip chip-german">Digga / Digger</a>
+                        <a href="#sheesh" class="chip chip-german">Sheesh</a>
+                        <a href="#alter" class="chip chip-german">Alter</a>
+                        <a href="#ehrenmann" class="chip chip-german">Ehrenmann</a>
+                        <a href="#lost" class="chip chip-german">Lost</a>
+                        <a href="#fly" class="chip chip-german">Fly sein</a>
+                        <a href="#safe" class="chip chip-german">Safe</a>
+                        <a href="#merkwuerdig" class="chip chip-german">Merkwürdig</a>
+                        <a href="#krass" class="chip chip-german">Krass</a>
+                        <a href="#babo" class="chip chip-german">Babo</a>
+                        <a href="#flexen" class="chip chip-german">Flexen</a>
+                        <a href="#goennung" class="chip chip-german">Gönnung</a>
+                        <a href="#wyld" class="chip chip-german">Wyld</a>
+                        <a href="#smash" class="chip chip-german">Smash</a>
+                        <a href="#glow-up" class="chip chip-german">Glow Up</a>
+                        <a href="#slayyy" class="chip chip-german">Slayyy</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="term-details">
+            <h2>All Terms</h2>
+            <div class="terms-list">
+                <!-- English Terms -->
+                <article class="term-card" id="shotgun">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Shotgun</h3>
+                    </div>
+                    <p class="term-card-meaning">Calling dibs on the front passenger seat of a car. Must be said when the car is in sight.</p>
+                    <p class="term-card-example">"Shotgun!" yelled Mike as they walked towards the car.</p>
+                </article>
+
+                <article class="term-card" id="no-cap">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">No Cap</h3>
+                    </div>
+                    <p class="term-card-meaning">No lie, for real, being completely honest. "Cap" means lying.</p>
+                    <p class="term-card-example">This pizza is amazing, no cap.</p>
+                </article>
+
+                <article class="term-card" id="slay">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Slay</h3>
+                    </div>
+                    <p class="term-card-meaning">To do something exceptionally well, to kill it, to succeed impressively.</p>
+                    <p class="term-card-example">You absolutely slayed that presentation!</p>
+                </article>
+
+                <article class="term-card" id="bussin">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Bussin</h3>
+                    </div>
+                    <p class="term-card-meaning">Really good, usually referring to food but can apply to anything amazing.</p>
+                    <p class="term-card-example">This burger is bussin!</p>
+                </article>
+
+                <article class="term-card" id="lowkey">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Lowkey</h3>
+                    </div>
+                    <p class="term-card-meaning">Secretly, somewhat, or subtly. The opposite is "highkey" which means obviously.</p>
+                    <p class="term-card-example">I lowkey want to skip the party tonight.</p>
+                </article>
+
+                <article class="term-card" id="bet">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Bet</h3>
+                    </div>
+                    <p class="term-card-meaning">An affirmation meaning "okay", "sure", or "sounds good". Expression of agreement.</p>
+                    <p class="term-card-example">"Wanna grab food later?" "Bet."</p>
+                </article>
+
+                <article class="term-card" id="salty">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Salty</h3>
+                    </div>
+                    <p class="term-card-meaning">Being upset, bitter, or annoyed about something, often something minor.</p>
+                    <p class="term-card-example">He's still salty about losing that game last week.</p>
+                </article>
+
+                <article class="term-card" id="ghosting">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Ghosting</h3>
+                    </div>
+                    <p class="term-card-meaning">Suddenly cutting off all communication with someone without explanation.</p>
+                    <p class="term-card-example">She ghosted him after their third date.</p>
+                </article>
+
+                <article class="term-card" id="vibe-check">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Vibe Check</h3>
+                    </div>
+                    <p class="term-card-meaning">Assessing the mood or energy of a person or situation.</p>
+                    <p class="term-card-example">Before we go in, quick vibe check - everyone feeling good?</p>
+                </article>
+
+                <article class="term-card" id="sus">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Sus</h3>
+                    </div>
+                    <p class="term-card-meaning">Short for suspicious or suspect. Something or someone that seems off or untrustworthy.</p>
+                    <p class="term-card-example">That excuse sounds kinda sus to me.</p>
+                </article>
+
+                <article class="term-card" id="rizz">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Rizz</h3>
+                    </div>
+                    <p class="term-card-meaning">Charisma or charm, especially in the context of attracting romantic interest.</p>
+                    <p class="term-card-example">He has so much rizz, everyone falls for him.</p>
+                </article>
+
+                <article class="term-card" id="simp">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Simp</h3>
+                    </div>
+                    <p class="term-card-meaning">Someone who does way too much for a person they like, often without getting anything in return.</p>
+                    <p class="term-card-example">He bought her flowers every day - he's such a simp.</p>
+                </article>
+
+                <article class="term-card" id="fomo">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">FOMO</h3>
+                    </div>
+                    <p class="term-card-meaning">Fear Of Missing Out - anxiety that something exciting is happening elsewhere.</p>
+                    <p class="term-card-example">I have major FOMO seeing everyone's vacation pics.</p>
+                </article>
+
+                <article class="term-card" id="yeet">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">Yeet</h3>
+                    </div>
+                    <p class="term-card-meaning">To throw something with force, or an exclamation of excitement.</p>
+                    <p class="term-card-example">He yeeted the ball across the field.</p>
+                </article>
+
+                <article class="term-card" id="goat">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇬🇧</span>
+                        <h3 class="term-card-title">GOAT</h3>
+                    </div>
+                    <p class="term-card-meaning">Greatest Of All Time - the best ever in a particular field.</p>
+                    <p class="term-card-example">Michael Jordan is the GOAT of basketball.</p>
+                </article>
+
+                <!-- German Terms -->
+                <article class="term-card" id="cringe">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Cringe</h3>
+                    </div>
+                    <p class="term-card-meaning">Fremdschämen, peinlich berührt sein. Wenn etwas so unangenehm ist, dass man sich schämt.</p>
+                    <p class="term-card-example">Das Video von ihm ist so cringe.</p>
+                </article>
+
+                <article class="term-card" id="isso">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Isso</h3>
+                    </div>
+                    <p class="term-card-meaning">Kurzform von "ist so". Bedeutet Zustimmung oder Bestätigung einer Aussage.</p>
+                    <p class="term-card-example">"Das Wetter ist heute echt mies." "Isso."</p>
+                </article>
+
+                <article class="term-card" id="digga">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Digga / Digger</h3>
+                    </div>
+                    <p class="term-card-meaning">Freundschaftliche Anrede unter Kumpels, ähnlich wie "Alter" oder "Bro".</p>
+                    <p class="term-card-example">Ey Digga, was geht?</p>
+                </article>
+
+                <article class="term-card" id="sheesh">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Sheesh</h3>
+                    </div>
+                    <p class="term-card-meaning">Ausruf der Bewunderung oder des Erstaunens, wenn etwas beeindruckend ist.</p>
+                    <p class="term-card-example">Sheesh, deine neuen Sneaker sind krass!</p>
+                </article>
+
+                <article class="term-card" id="alter">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Alter</h3>
+                    </div>
+                    <p class="term-card-meaning">Anrede für Freunde, Ausdruck von Überraschung oder Frustration.</p>
+                    <p class="term-card-example">Alter, das hast du echt gut gemacht!</p>
+                </article>
+
+                <article class="term-card" id="ehrenmann">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Ehrenmann / Ehrenfrau</h3>
+                    </div>
+                    <p class="term-card-meaning">Jemand der sich ehrenhaft verhält, ein guter Mensch, jemand der Respekt verdient.</p>
+                    <p class="term-card-example">Er hat mir sein Essen abgegeben - totaler Ehrenmann!</p>
+                </article>
+
+                <article class="term-card" id="lost">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Lost</h3>
+                    </div>
+                    <p class="term-card-meaning">Ahnungslos, verwirrt, oder ohne Plan. Jugendwort des Jahres 2020.</p>
+                    <p class="term-card-example">Ich bin so lost in Mathe, ich verstehe gar nichts.</p>
+                </article>
+
+                <article class="term-card" id="fly">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Fly sein</h3>
+                    </div>
+                    <p class="term-card-meaning">Cool sein, gut drauf sein, etwas Besonderes ausstrahlen.</p>
+                    <p class="term-card-example">Mit dem Outfit bist du mega fly!</p>
+                </article>
+
+                <article class="term-card" id="safe">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Safe</h3>
+                    </div>
+                    <p class="term-card-meaning">Sicher, auf jeden Fall, definitiv. Bestätigung einer Aussage.</p>
+                    <p class="term-card-example">"Kommst du morgen zur Party?" "Safe!"</p>
+                </article>
+
+                <article class="term-card" id="merkwuerdig">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Merkwürdig / Komisch</h3>
+                    </div>
+                    <p class="term-card-meaning">Im Jugendslang: Seltsam oder verdächtig, ähnlich wie "sus".</p>
+                    <p class="term-card-example">Der Typ da drüben ist irgendwie merkwürdig.</p>
+                </article>
+
+                <article class="term-card" id="krass">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Krass</h3>
+                    </div>
+                    <p class="term-card-meaning">Extrem, heftig, unglaublich - kann positiv oder negativ sein.</p>
+                    <p class="term-card-example">Das Konzert war echt krass!</p>
+                </article>
+
+                <article class="term-card" id="babo">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Babo</h3>
+                    </div>
+                    <p class="term-card-meaning">Der Boss, Anführer, die wichtigste Person. Vom Kurdischen "Bav" (Vater).</p>
+                    <p class="term-card-example">Er ist der Babo in unserer Gruppe.</p>
+                </article>
+
+                <article class="term-card" id="flexen">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Flexen</h3>
+                    </div>
+                    <p class="term-card-meaning">Angeben, protzen, seinen Reichtum oder Erfolg zeigen.</p>
+                    <p class="term-card-example">Er flext ständig mit seinem neuen Auto.</p>
+                </article>
+
+                <article class="term-card" id="goennung">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Gönnung</h3>
+                    </div>
+                    <p class="term-card-meaning">Sich etwas gönnen, sich verwöhnen, etwas Gutes für sich selbst tun.</p>
+                    <p class="term-card-example">Heute Abend Netflix und Pizza - pure Gönnung!</p>
+                </article>
+
+                <article class="term-card" id="wyld">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Wyld / Wild</h3>
+                    </div>
+                    <p class="term-card-meaning">Verrückt, übertrieben, unglaublich. Kann bewundernd oder kritisch gemeint sein.</p>
+                    <p class="term-card-example">Die Party gestern war wyld!</p>
+                </article>
+
+                <article class="term-card" id="smash">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Smash</h3>
+                    </div>
+                    <p class="term-card-meaning">Jugendwort des Jahres 2022. Bedeutet, dass man jemanden attraktiv findet.</p>
+                    <p class="term-card-example">Die Person ist definitiv ein Smash.</p>
+                </article>
+
+                <article class="term-card" id="glow-up">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Glow Up</h3>
+                    </div>
+                    <p class="term-card-meaning">Eine positive Veränderung im Aussehen oder Selbstbewusstsein über Zeit.</p>
+                    <p class="term-card-example">Hast du ihren Glow Up gesehen? Krass!</p>
+                </article>
+
+                <article class="term-card" id="slayyy">
+                    <div class="term-card-header">
+                        <span class="term-card-flag">🇩🇪</span>
+                        <h3 class="term-card-title">Slayyy</h3>
+                    </div>
+                    <p class="term-card-meaning">Jemandem gratulieren oder bewundern, wenn er/sie etwas richtig gut macht.</p>
+                    <p class="term-card-example">Dein Make-up heute - Slayyy!</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
