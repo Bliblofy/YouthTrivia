@@ -2,6 +2,9 @@
   "name": "youth-trivia",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -33,5 +36,8 @@
     "vite": "^5.0.0",
     "vitest": "^4.1.4"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@sveltejs/adapter-vercel": "^6.3.3"
+  }
 }
