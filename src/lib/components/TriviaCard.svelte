@@ -51,7 +51,7 @@
 	}
 </script>
 
-<div class="card-overlay" onclick={onclose} role="button" tabindex="-1" onkeydown={(e) => e.key === 'Escape' && onclose()} aria-label="Close dialog">
+<div class="card-overlay" onclick={onclose} role="button" tabindex="-1" aria-label="Close dialog">
 	<div class="trivia-card" onclick={(e) => e.stopPropagation()} role="dialog" aria-labelledby="trivia-title" aria-modal="true">
 		<button class="close-button" onclick={onclose} type="button" aria-label="Close">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
