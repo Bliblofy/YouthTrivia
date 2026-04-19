@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Solutions — Cursor Debug Training</title>
+	<meta name="description" content="Walk-through of the deliberate bugs in the Cursor Debug Training standalone exercise." />
+	<link rel="stylesheet" href="solutions.css" />
+</head>
+<body>
+	<nav class="top-nav">
+		<div class="nav-content">
+			<a href="../index.html" class="nav-logo">← Debug Training</a>
+			<span class="nav-tag">Solutions</span>
+		</div>
+	</nav>
+
+	<main>
+		<header class="hero">
+			<span class="hero-badge">Spoilers ahead</span>
+			<h1>Solutions walk-through</h1>
+			<p>One card per bug — symptom, where to look in the inspector, and the exact fix.</p>
+		</header>
+
+		<section class="intro">
+			<p>
+				Each card explains <strong>what you should see</strong>, <strong>which DevTools tab</strong>
+				is most useful, and the <strong>code change</strong> that fixes it. File paths are relative
+				to the <code>debug-training-standalone/</code> folder.
+			</p>
+		</section>
+
+		<section class="bug-list">
+
+			<article class="bug-card">
+				<h2><span class="bug-number">1</span> The whole page looks unstyled</h2>
+				<div class="bug-row">
+					<span class="label">Symptom</span>
+					<span class="value">No colors, no layout, no rounded cards. Plain black text on a white background.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Where to look</span>
+					<span class="value">DevTools → <strong>Network</strong> tab. You'll see a row for <code>style.css</code> with status <code>404</code>.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Why it happens</span>
+					<span class="value">The <code>&lt;link&gt;</code> in <code>index.html</code> points to <code>style.css</code>, but the actual file is named <code>styles.css</code> (with an <em>s</em>).</span>
+				</div>
+				<div class="fix-block">
+					<span class="label">Fix in <code>index.html</code></span>
+<pre><span class="removed">&lt;link rel="stylesheet" href="style.css" /&gt;</span>
+<span class="added">&lt;link rel="stylesheet" href="styles.css" /&gt;</span></pre>
+				</div>
+			</article>
+
+			<article class="bug-card">
+				<h2><span class="bug-number">2</span> The quiz is stuck on "Loading…"</h2>
+				<div class="bug-row">
+					<span class="label">Symptom</span>
+					<span class="value">The quiz card never renders. The placeholder text "Loading…" stays on screen.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Where to look</span>
+					<span class="value">DevTools → <strong>Console</strong> shows <code>ReferenceError: triviaDatabase is not defined</code>. The <strong>Network</strong> tab shows a 404 for <code>data.js</code>.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Why it happens</span>
+					<span class="value">The script tag points to <code>data.js</code> at the page root, but the file actually lives in the <code>js/</code> folder. <code>quiz.js</code> then can't find <code>window.triviaDatabase</code>.</span>
+				</div>
+				<div class="fix-block">
+					<span class="label">Fix in <code>index.html</code></span>
+<pre><span class="removed">&lt;script src="data.js"&gt;&lt;/script&gt;</span>
+<span class="added">&lt;script src="js/data.js"&gt;&lt;/script&gt;</span>
+&lt;script src="js/quiz.js"&gt;&lt;/script&gt;</pre>
+				</div>
+			</article>
+
+			<article class="bug-card">
+				<h2><span class="bug-number">3</span> The Solutions button drops below the nav</h2>
+				<div class="bug-row">
+					<span class="label">Symptom</span>
+					<span class="value">The "Solutions" button appears on its own row underneath the navigation bar instead of aligned to the right of it.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Where to look</span>
+					<span class="value">DevTools → <strong>Elements</strong>. You'll see <code>&lt;div class="nav-actions"&gt;</code> as a sibling of <code>&lt;div class="nav-content"&gt;</code>, not nested inside it. The flex layout that should align it can't reach it.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Why it happens</span>
+					<span class="value">The <code>nav-content</code> wrapper is closed too early, so <code>nav-actions</code> escapes the flex container.</span>
+				</div>
+				<div class="fix-block">
+					<span class="label">Fix in <code>index.html</code></span>
+<pre>&lt;nav class="top-nav"&gt;
+  &lt;div class="nav-content"&gt;
+    &lt;span class="nav-logo"&gt;Debug Training&lt;/span&gt;
+    &lt;span class="nav-tag"&gt;Standalone&lt;/span&gt;
+<span class="removed">  &lt;/div&gt;</span>
+<span class="removed">  &lt;div class="nav-actions"&gt;</span>
+<span class="added">    &lt;div class="nav-actions"&gt;</span>
+      &lt;button type="button" class="solutions-button" id="solutions-trigger"&gt;
+        Solutions
+      &lt;/button&gt;
+<span class="added">    &lt;/div&gt;</span>
+  &lt;/div&gt;
+&lt;/nav&gt;</pre>
+				</div>
+			</article>
+
+			<article class="bug-card">
+				<h2><span class="bug-number">4</span> The Submit/Next button looks like a plain default button</h2>
+				<div class="bug-row">
+					<span class="label">Symptom</span>
+					<span class="value">Inside the otherwise-styled quiz card, the "Submit answer" / "Next question" / "Play again" button is a tiny, default-grey browser button with no purple background.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Where to look</span>
+					<span class="value">DevTools → <strong>Elements</strong>. Click the button. The <strong>Styles</strong> panel shows no <code>.quiz-button</code> rule matches because the element's class is <code>quiz-buton</code> (only one <em>t</em>).</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Why it happens</span>
+					<span class="value">Typo in the class name inside <code>js/quiz.js</code>. The CSS rule in <code>styles.css</code> is <code>.quiz-button</code>, but the JS template emits <code>quiz-buton</code>.</span>
+				</div>
+				<div class="fix-block">
+					<span class="label">Fix in <code>js/quiz.js</code> (button is rendered inside <code>render()</code>)</span>
+<pre><span class="removed">'&lt;button class="quiz-buton" id="' + buttonId + '"' + disabledAttr + '&gt;' +</span>
+<span class="added">'&lt;button class="quiz-button" id="' + buttonId + '"' + disabledAttr + '&gt;' +</span>
+    buttonLabel +
+'&lt;/button&gt;'</pre>
+					<p class="bug-row" style="margin-top:0.5rem;">
+						<span class="label">Tip</span>
+						<span class="value">Search the file for <code>quiz-buton</code> — there's only one occurrence.</span>
+					</p>
+				</div>
+			</article>
+
+			<article class="bug-card">
+				<h2><span class="bug-number">5</span> Correct answers are reported as wrong (and the score never moves)</h2>
+				<div class="bug-row">
+					<span class="label">Symptom</span>
+					<span class="value">Pick the obviously-correct meaning and the page tells you "Not quite." Pick a wrong meaning and the page says "Correct!". The score counter stays at 0 when it should go up, or vice-versa.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Where to look</span>
+					<span class="value">DevTools → <strong>Sources</strong>. Open <code>js/quiz.js</code> and find <code>checkAnswer</code>. Set a breakpoint, submit an answer, and inspect the values — the comparison is inverted.</span>
+				</div>
+				<div class="bug-row">
+					<span class="label">Why it happens</span>
+					<span class="value">The function returns <code>!==</code> when it should return <code>===</code>. So an actual match (<code>meaning === selected</code>) returns <code>false</code> — meaning "not correct".</span>
+				</div>
+				<div class="fix-block">
+					<span class="label">Fix in <code>js/quiz.js</code></span>
+<pre>function checkAnswer(entry, selected) {
+<span class="removed">  return entry.meaning.trim() !== selected.trim();</span>
+<span class="added">  return entry.meaning.trim() === selected.trim();</span>
+}</pre>
+				</div>
+			</article>
+
+		</section>
+
+		<a class="back-link" href="../index.html">← Back to the buggy page</a>
+	</main>
+</body>
+</html>

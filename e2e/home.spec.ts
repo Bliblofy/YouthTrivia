@@ -147,7 +147,7 @@ test.describe('Compare Page', () => {
 
 	test('should display comparison content', async ({ page }) => {
 		await page.goto('/compare');
-		await expect(page.getByRole('heading')).toBeVisible();
+		await expect(page.getByRole('heading', { name: /svelte vs html/i })).toBeVisible();
 	});
 });
 
@@ -198,7 +198,7 @@ test.describe('Accessibility', () => {
 		await page.keyboard.press('ArrowDown');
 		await page.keyboard.press('Enter');
 
-		const closeButton = page.getByRole('button', { name: /close/i });
+		const closeButton = page.getByRole('button', { name: 'Close', exact: true });
 		await expect(closeButton).toBeVisible();
 	});
 });

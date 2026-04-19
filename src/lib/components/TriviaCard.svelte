@@ -27,6 +27,17 @@
 			});
 	});
 
+	$effect(() => {
+		function onEscape(e: KeyboardEvent) {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				onclose();
+			}
+		}
+		window.addEventListener('keydown', onEscape);
+		return () => window.removeEventListener('keydown', onEscape);
+	});
+
 	function getLanguageLabel(lang: 'en' | 'de' | 'ch'): string {
 		if (lang === 'en') return 'English';
 		if (lang === 'ch') return 'Swiss German';

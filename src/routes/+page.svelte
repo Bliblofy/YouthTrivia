@@ -114,21 +114,54 @@
 	</footer>
 
 	<section class="debug-training-section">
-		<a href="/debug-training" class="debug-training-link">
-			<div class="debug-training-icon">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/>
-					<path d="M9 16l2 2 4-4"/>
+		<h2 class="debug-training-heading">Cursor Debug Training</h2>
+		<p class="debug-training-intro">
+			Practice debugging in Cursor with two graded exercises. Pick the level that matches your
+			experience. Both come from
+			<a class="debug-training-repo" href="https://github.com/Bliblofy/YouthTrivia" target="_blank" rel="noopener">github.com/Bliblofy/YouthTrivia</a>.
+		</p>
+		<div class="debug-training-grid">
+			<a href="/basic-training" class="debug-training-card basic">
+				<div class="debug-training-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M8 2v4M16 2v4M3 10h18M5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/>
+						<path d="M9 16l2 2 4-4"/>
+					</svg>
+				</div>
+				<div class="debug-training-text">
+					<span class="debug-training-tag basic-tag">Beginner</span>
+					<span class="debug-training-title">Basic Training</span>
+					<span class="debug-training-subtitle">
+						Plain HTML, CSS, and vanilla JS. No npm. Clone one folder, open it in your browser,
+						fix 5 visible bugs with the inspector.
+					</span>
+				</div>
+				<svg class="debug-training-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
 				</svg>
-			</div>
-			<div class="debug-training-text">
-				<span class="debug-training-title">Cursor Debug Training</span>
-				<span class="debug-training-subtitle">A practice page full of deliberate UI &amp; server-side bugs. Fix them using Cursor's Debug mode.</span>
-			</div>
-			<svg class="debug-training-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<path d="M5 12h14M12 5l7 7-7 7"/>
-			</svg>
-		</a>
+			</a>
+
+			<a href="/advanced-training" class="debug-training-card advanced">
+				<div class="debug-training-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M12 2L2 7l10 5 10-5-10-5z"/>
+						<path d="M2 17l10 5 10-5"/>
+						<path d="M2 12l10 5 10-5"/>
+					</svg>
+				</div>
+				<div class="debug-training-text">
+					<span class="debug-training-tag advanced-tag">Advanced</span>
+					<span class="debug-training-title">Advanced Training</span>
+					<span class="debug-training-subtitle">
+						Full SvelteKit stack. Bugs in the Svelte component, server load, and POST endpoint
+						— including a deliberate 500 you'll have to fix first.
+					</span>
+				</div>
+				<svg class="debug-training-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
+			</a>
+		</div>
 	</section>
 </main>
 
@@ -484,12 +517,44 @@
 		margin-top: 2rem;
 	}
 
-	.debug-training-link {
+	.debug-training-heading {
+		text-align: center;
+		margin: 0 0 0.5rem;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #374151;
+	}
+
+	.debug-training-intro {
+		text-align: center;
+		max-width: 620px;
+		margin: 0 auto 1.5rem;
+		font-size: 0.95rem;
+		color: #4b5563;
+		line-height: 1.55;
+	}
+
+	.debug-training-repo {
+		color: #7c3aed;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.debug-training-repo:hover {
+		text-decoration: underline;
+	}
+
+	.debug-training-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1rem;
+	}
+
+	.debug-training-card {
 		display: flex;
 		align-items: center;
 		gap: 1rem;
 		padding: 1.25rem 1.5rem;
-		background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
 		color: #f9fafb;
 		border-radius: 1rem;
 		text-decoration: none;
@@ -498,9 +563,24 @@
 		border: 2px solid transparent;
 	}
 
-	.debug-training-link:hover {
+	.debug-training-card.basic {
+		background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+	}
+
+	.debug-training-card.advanced {
+		background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+	}
+
+	.debug-training-card:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.25);
+	}
+
+	.debug-training-card.basic:hover {
+		border-color: #34d399;
+	}
+
+	.debug-training-card.advanced:hover {
 		border-color: #f59e0b;
 	}
 
@@ -511,9 +591,17 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border-radius: 0.75rem;
+	}
+
+	.debug-training-card.basic .debug-training-icon {
+		background: rgba(52, 211, 153, 0.15);
+		color: #6ee7b7;
+	}
+
+	.debug-training-card.advanced .debug-training-icon {
 		background: rgba(245, 158, 11, 0.15);
 		color: #fbbf24;
-		border-radius: 0.75rem;
 	}
 
 	.debug-training-icon svg {
@@ -525,13 +613,42 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 0.125rem;
+		gap: 0.2rem;
 		min-width: 0;
+	}
+
+	.debug-training-tag {
+		display: inline-block;
+		align-self: flex-start;
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		padding: 0.15rem 0.5rem;
+		border-radius: 9999px;
+		margin-bottom: 0.15rem;
+	}
+
+	.basic-tag {
+		background: rgba(52, 211, 153, 0.18);
+		color: #6ee7b7;
+	}
+
+	.advanced-tag {
+		background: rgba(245, 158, 11, 0.18);
+		color: #fbbf24;
 	}
 
 	.debug-training-title {
 		font-size: 1rem;
 		font-weight: 700;
+	}
+
+	.debug-training-card.basic .debug-training-title {
+		color: #6ee7b7;
+	}
+
+	.debug-training-card.advanced .debug-training-title {
 		color: #fbbf24;
 	}
 
@@ -545,6 +662,13 @@
 		flex-shrink: 0;
 		width: 1.25rem;
 		height: 1.25rem;
+	}
+
+	.debug-training-card.basic .debug-training-arrow {
+		color: #6ee7b7;
+	}
+
+	.debug-training-card.advanced .debug-training-arrow {
 		color: #fbbf24;
 	}
 
