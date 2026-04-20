@@ -43,39 +43,88 @@
 		<h2>Step 1 — Get the folder</h2>
 		<p>
 			You don't need to clone the whole repository. Use git's sparse-checkout to grab just the
-			<code>debug-training-standalone/</code> folder from
+			<code>static/debug-training-standalone/</code> folder from
 			<a href="https://github.com/Bliblofy/YouthTrivia" target="_blank" rel="noopener">
 				github.com/Bliblofy/YouthTrivia
-			</a>:
+			</a>.
+			These commands work the same in <strong>macOS/Linux Terminal</strong>, <strong>Git Bash</strong>,
+			<strong>Windows PowerShell</strong>, and <strong>cmd</strong> — only the prompt looks different.
 		</p>
 <pre class="code-block">git clone --depth 1 --filter=blob:none --sparse https://github.com/Bliblofy/YouthTrivia.git
 cd YouthTrivia
-git sparse-checkout set debug-training-standalone
-cd debug-training-standalone</pre>
+git sparse-checkout set static/debug-training-standalone
+cd static/debug-training-standalone</pre>
 		<p class="note">
 			Prefer a single download? Browse the folder directly on GitHub:
 			<a
-				href="https://github.com/Bliblofy/YouthTrivia/tree/main/debug-training-standalone"
+				href="https://github.com/Bliblofy/YouthTrivia/tree/main/static/debug-training-standalone"
 				target="_blank"
 				rel="noopener"
 			>
-				Bliblofy/YouthTrivia/debug-training-standalone
+				Bliblofy/YouthTrivia/static/debug-training-standalone
 			</a>.
 		</p>
 	</section>
 
 	<section class="card">
 		<h2>Step 2 — Open the page</h2>
-		<p>Pick one:</p>
-		<ul class="plain-list">
-			<li><strong>Easiest:</strong> double-click <code>index.html</code> to open it in your browser.</li>
-			<li>
-				<strong>Recommended:</strong> from inside the folder, run a tiny local server so the
-				Network tab in DevTools behaves like a real site:
-			</li>
-		</ul>
-<pre class="code-block">python3 -m http.server 8000</pre>
-		<p>Then open <code>http://localhost:8000</code> in your browser.</p>
+
+		<h3 class="tier-title">Tier A — Live online (zero install)</h3>
+		<p>
+			Try the same buggy page and the walk-through solutions on this site — nothing to install.
+			<strong>Try the bugs yourself before opening the solutions.</strong>
+		</p>
+		<div class="live-demo-row">
+			<a class="primary-btn" href="/debug-training-standalone/index.html">Open the buggy page online</a>
+			<a class="secondary-btn" href="/debug-training-standalone/solutions/index.html">
+				Open the solutions online
+			</a>
+		</div>
+		<p class="note tier-note">
+			The live buggy page is identical to <code>index.html</code> in the folder you clone — same bugs,
+			same files to fix locally.
+		</p>
+
+		<h3 class="tier-title">Tier B — Local, no extra tools</h3>
+		<p>
+			Open <code>index.html</code> directly in your browser (double-click the file, or use a terminal).
+			If you already finished Step 1, your terminal is probably <em>inside</em> this folder — then you
+			can skip the <code>cd</code> lines below.
+		</p>
+		<p class="code-label">macOS / Linux / Git Bash</p>
+<pre class="code-block">cd static/debug-training-standalone   # or wherever you put the folder
+open index.html                       # macOS
+xdg-open index.html                   # many Linux desktops</pre>
+		<p class="code-label">Windows Command Prompt</p>
+<pre class="code-block">cd static\debug-training-standalone
+start index.html</pre>
+		<p class="code-label">Windows PowerShell</p>
+<pre class="code-block">cd static\debug-training-standalone
+Invoke-Item .\index.html</pre>
+		<p class="note">
+			Or open the folder in <strong>Cursor</strong> and use the built-in browser preview / a
+			<em>Live Preview</em> extension to open <code>index.html</code>.
+		</p>
+
+		<h3 class="tier-title">Tier C — Local web server (optional)</h3>
+		<p>
+			For a closer match to a real website (especially the <strong>Network</strong> tab), serve the
+			folder with a tiny HTTP server. Use whatever you already have — you do <strong>not</strong> need
+			Python, Node, or PHP if Tier A or B works for you.
+		</p>
+		<p class="code-label">Python 3 — macOS / Linux / Git Bash</p>
+<pre class="code-block">cd static/debug-training-standalone
+python3 -m http.server 8000</pre>
+		<p class="code-label">Python — Windows (if the <code>py</code> launcher is installed)</p>
+<pre class="code-block">cd static\debug-training-standalone
+py -m http.server 8000</pre>
+		<p class="code-label">Node.js (any shell, if Node is installed)</p>
+<pre class="code-block">cd static/debug-training-standalone
+npx --yes serve .</pre>
+		<p class="code-label">PHP (any shell, if PHP is installed)</p>
+<pre class="code-block">cd static/debug-training-standalone
+php -S localhost:8000</pre>
+		<p>Then open <code>http://localhost:8000</code> in your browser (some tools print a slightly different URL — use what they show).</p>
 	</section>
 
 	<section class="card">
@@ -97,14 +146,24 @@ cd debug-training-standalone</pre>
 			<li>Reload after each fix to confirm.</li>
 		</ol>
 		<p class="note">
-			A <strong>Solutions</strong> button is included in the page header for when you really need a
-			hint — but it asks you to try first.
+			The standalone page has a <strong>Solutions</strong> button in its header (with a "try first"
+			overlay). You can also open the same walk-through at
+			<a href="/debug-training-standalone/solutions/index.html">/debug-training-standalone/solutions/index.html</a>
+			— but only when you really need a hint.
 		</p>
 	</section>
 
 	<div class="actions">
-		<a class="primary-btn" href="https://github.com/Bliblofy/YouthTrivia/tree/main/debug-training-standalone" target="_blank" rel="noopener">
-			Open the folder on GitHub →
+		<a class="primary-btn" href="/debug-training-standalone/index.html">Open the live buggy page</a>
+		<a class="secondary-btn" href="https://github.com/Bliblofy/YouthTrivia/tree/main/static/debug-training-standalone" target="_blank" rel="noopener">
+			Open the folder on GitHub
+		</a>
+		<a
+			class="warning-link"
+			href="/debug-training-standalone/solutions/index.html"
+			title="Spoilers: only open after you've tried debugging yourself."
+		>
+			Reveal the solutions (spoilers)
 		</a>
 		<a class="secondary-btn" href="/advanced-training">Looking for the harder one? Try Advanced</a>
 	</div>
@@ -209,6 +268,17 @@ cd debug-training-standalone</pre>
 		color: #064e3b;
 	}
 
+	.card h3.tier-title {
+		margin: 1.25rem 0 0.5rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #047857;
+	}
+
+	.card h3.tier-title:first-of-type {
+		margin-top: 0;
+	}
+
 	.card p {
 		margin: 0 0 0.75rem;
 		color: #374151;
@@ -242,6 +312,15 @@ cd debug-training-standalone</pre>
 		color: #10b981;
 	}
 
+	.code-label {
+		margin: 0.5rem 0 0.35rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: #6b7280;
+	}
+
 	.code-block {
 		font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 		font-size: 0.85rem;
@@ -255,6 +334,18 @@ cd debug-training-standalone</pre>
 		white-space: pre;
 	}
 
+	.live-demo-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin: 0.75rem 0 0.5rem;
+		align-items: center;
+	}
+
+	.tier-note {
+		margin-top: 0.5rem !important;
+	}
+
 	.note {
 		font-size: 0.9rem;
 		color: #6b7280;
@@ -266,6 +357,7 @@ cd debug-training-standalone</pre>
 		flex-wrap: wrap;
 		gap: 0.75rem;
 		justify-content: center;
+		align-items: center;
 		margin-top: 1.75rem;
 	}
 
@@ -301,5 +393,18 @@ cd debug-training-standalone</pre>
 	.secondary-btn:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+	}
+
+	.warning-link {
+		font-size: 0.88rem;
+		font-weight: 600;
+		color: #b45309;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		padding: 0.35rem 0.5rem;
+	}
+
+	.warning-link:hover {
+		color: #92400e;
 	}
 </style>
