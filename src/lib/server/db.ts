@@ -30,6 +30,16 @@ function connectionStringForTlsMode(cs: string, relaxed: boolean): string {
 	}
 }
 
+/** Supabase pooler / DB hosts often hit SELF_SIGNED_CERT_IN_CHAIN on Vercel; `sslmode=no-verify` avoids broken merge with `sslmode=require`. */
+function isSupabasePostgresHost(cs: string): boolean {
+	try {
+		const host = new URL(cs).hostname.toLowerCase();
+		return host.endsWith('.supabase.co') || host.includes('pooler.supabase.com');
+	} catch {
+		return false;
+	}
+}
+
 function getPool(): pg.Pool {
 	const cs = connectionString();
 	if (!cs) {
@@ -39,8 +49,16 @@ function getPool(): pg.Pool {
 		const isProd = process.env.NODE_ENV === 'production';
 		const forceInsecureTls =
 			process.env.POSTGRES_TLS_INSECURE === '1' || env.POSTGRES_TLS_INSECURE === '1';
-		/** Local dev / SSL inspection often causes SELF_SIGNED_CERT_IN_CHAIN; production keeps URL ssl semantics unless POSTGRES_TLS_INSECURE=1. */
-		const useRelaxedTls = !isProd || forceInsecureTls;
+		const forceStrictTls =
+			process.env.POSTGRES_TLS_STRICT === '1' || env.POSTGRES_TLS_STRICT === '1';
+		/**
+		 * Relaxed TLS (`sslmode=no-verify` rewrite): local dev; any env with POSTGRES_TLS_INSECURE=1;
+		 * Supabase URLs in production unless POSTGRES_TLS_STRICT=1 (opt back into verify-full semantics).
+		 */
+		const useRelaxedTls =
+			!isProd ||
+			forceInsecureTls ||
+			(isSupabasePostgresHost(cs) && !forceStrictTls);
 		const connectionString = connectionStringForTlsMode(cs, useRelaxedTls);
 
 		pool = new pg.Pool({
