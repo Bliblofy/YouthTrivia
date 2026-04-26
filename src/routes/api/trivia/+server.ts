@@ -1,7 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getAllDbTrivia, searchTriviaInDb, getTriviaByLanguage, upsertTrivia } from '$lib/server/db';
+import { getAllDbTrivia, searchTriviaInDb, getTriviaByLanguage, upsertTrivia, initializeDatabase } from '$lib/server/db';
 import { triviaDatabase, searchTrivia as searchTriviaLocal } from '$lib/trivia';
+import { env } from '$env/dynamic/private';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const query = url.searchParams.get('q');
@@ -37,6 +38,23 @@ export const GET: RequestHandler = async ({ url }) => {
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
+		const postgresUrl = env.POSTGRES_URL ?? env.DATABASE_URL;
+
+		if (!postgresUrl) {
+			return json(
+				{
+					success: false,
+					error: 'Database is not configured. Set POSTGRES_URL (or DATABASE_URL) and restart the dev server.'
+				},
+				{ status: 503 }
+			);
+		}
+
+		// `pg` uses process.env when built from tooling; mirror from SvelteKit env.
+		if (postgresUrl) {
+			process.env.POSTGRES_URL = postgresUrl;
+		}
+
 		const body = await request.json();
 
 		const id = body.term
@@ -54,6 +72,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			trivia: body.trivia || undefined
 		};
 
+		await initializeDatabase();
 		await upsertTrivia(entry);
 
 		return json({ success: true, message: 'Trivia added successfully!', entry });

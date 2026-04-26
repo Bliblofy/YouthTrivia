@@ -1,8 +1,60 @@
-import { sql } from '@vercel/postgres';
+import pg from 'pg';
+import { env } from '$env/dynamic/private';
 import type { TriviaEntry } from '$lib/trivia';
 
+/** Prefer process.env (mirrored in routes) then SvelteKit private env. */
+function connectionString(): string | undefined {
+	return (
+		process.env.POSTGRES_URL ||
+		process.env.DATABASE_URL ||
+		env.POSTGRES_URL ||
+		env.DATABASE_URL
+	);
+}
+
+let pool: pg.Pool | null = null;
+
+/**
+ * `pg` merges `parse(connectionString)` over top-level Pool options, so a URL
+ * `sslmode=require` wipes an explicit `ssl: { rejectUnauthorized: false }`.
+ * `sslmode=no-verify` is what `pg-connection-string` maps to `rejectUnauthorized: false`.
+ */
+function connectionStringForTlsMode(cs: string, relaxed: boolean): string {
+	if (!relaxed) return cs;
+	try {
+		const u = new URL(cs);
+		u.searchParams.set('sslmode', 'no-verify');
+		return u.toString();
+	} catch {
+		return cs;
+	}
+}
+
+function getPool(): pg.Pool {
+	const cs = connectionString();
+	if (!cs) {
+		throw new Error('Missing POSTGRES_URL or DATABASE_URL');
+	}
+	if (!pool) {
+		const isProd = process.env.NODE_ENV === 'production';
+		const forceInsecureTls =
+			process.env.POSTGRES_TLS_INSECURE === '1' || env.POSTGRES_TLS_INSECURE === '1';
+		/** Local dev / SSL inspection often causes SELF_SIGNED_CERT_IN_CHAIN; production keeps URL ssl semantics unless POSTGRES_TLS_INSECURE=1. */
+		const useRelaxedTls = !isProd || forceInsecureTls;
+		const connectionString = connectionStringForTlsMode(cs, useRelaxedTls);
+
+		pool = new pg.Pool({
+			connectionString,
+			max: 10,
+			connectionTimeoutMillis: 15_000
+		});
+	}
+	return pool;
+}
+
 export async function initializeDatabase(): Promise<void> {
-	await sql`
+	const client = getPool();
+	await client.query(`
 		CREATE TABLE IF NOT EXISTS trivia (
 			id TEXT PRIMARY KEY,
 			term TEXT NOT NULL,
@@ -12,14 +64,14 @@ export async function initializeDatabase(): Promise<void> {
 			giphy_search_term TEXT NOT NULL,
 			trivia TEXT
 		)
-	`;
+	`);
 
-	await sql`CREATE INDEX IF NOT EXISTS idx_trivia_language ON trivia(language)`;
-	await sql`CREATE INDEX IF NOT EXISTS idx_trivia_term ON trivia(term)`;
+	await client.query(`CREATE INDEX IF NOT EXISTS idx_trivia_language ON trivia(language)`);
+	await client.query(`CREATE INDEX IF NOT EXISTS idx_trivia_term ON trivia(term)`);
 }
 
 export async function getAllDbTrivia(): Promise<TriviaEntry[]> {
-	const { rows } = await sql`SELECT * FROM trivia ORDER BY term`;
+	const { rows } = await getPool().query(`SELECT * FROM trivia ORDER BY term`);
 
 	return rows.map((row) => ({
 		id: row.id,
@@ -33,7 +85,9 @@ export async function getAllDbTrivia(): Promise<TriviaEntry[]> {
 }
 
 export async function getTriviaByLanguage(language: 'en' | 'de' | 'ch'): Promise<TriviaEntry[]> {
-	const { rows } = await sql`SELECT * FROM trivia WHERE language = ${language} ORDER BY term`;
+	const { rows } = await getPool().query(`SELECT * FROM trivia WHERE language = $1 ORDER BY term`, [
+		language
+	]);
 
 	return rows.map((row) => ({
 		id: row.id,
@@ -48,14 +102,18 @@ export async function getTriviaByLanguage(language: 'en' | 'de' | 'ch'): Promise
 
 export async function searchTriviaInDb(query: string): Promise<TriviaEntry[]> {
 	const pattern = `%${query.toLowerCase()}%`;
+	const prefix = `${query.toLowerCase()}%`;
 
-	const { rows } = await sql`
-		SELECT * FROM trivia 
-		WHERE LOWER(term) LIKE ${pattern} OR LOWER(meaning) LIKE ${pattern}
-		ORDER BY 
-			CASE WHEN LOWER(term) LIKE ${query.toLowerCase() + '%'} THEN 0 ELSE 1 END,
+	const { rows } = await getPool().query(
+		`
+		SELECT * FROM trivia
+		WHERE LOWER(term) LIKE $1 OR LOWER(meaning) LIKE $1
+		ORDER BY
+			CASE WHEN LOWER(term) LIKE $2 THEN 0 ELSE 1 END,
 			term
-	`;
+	`,
+		[pattern, prefix]
+	);
 
 	return rows.map((row) => ({
 		id: row.id,
@@ -69,9 +127,10 @@ export async function searchTriviaInDb(query: string): Promise<TriviaEntry[]> {
 }
 
 export async function upsertTrivia(entry: TriviaEntry): Promise<void> {
-	await sql`
+	await getPool().query(
+		`
 		INSERT INTO trivia (id, term, language, meaning, example, giphy_search_term, trivia)
-		VALUES (${entry.id}, ${entry.term}, ${entry.language}, ${entry.meaning}, ${entry.example}, ${entry.giphySearchTerm}, ${entry.trivia ?? null})
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		ON CONFLICT (id) DO UPDATE SET
 			term = EXCLUDED.term,
 			language = EXCLUDED.language,
@@ -79,7 +138,17 @@ export async function upsertTrivia(entry: TriviaEntry): Promise<void> {
 			example = EXCLUDED.example,
 			giphy_search_term = EXCLUDED.giphy_search_term,
 			trivia = EXCLUDED.trivia
-	`;
+	`,
+		[
+			entry.id,
+			entry.term,
+			entry.language,
+			entry.meaning,
+			entry.example,
+			entry.giphySearchTerm,
+			entry.trivia ?? null
+		]
+	);
 }
 
 export async function seedDatabase(entries: TriviaEntry[]): Promise<number> {
@@ -92,11 +161,11 @@ export async function seedDatabase(entries: TriviaEntry[]): Promise<number> {
 }
 
 export async function deleteTrivia(id: string): Promise<boolean> {
-	const result = await sql`DELETE FROM trivia WHERE id = ${id}`;
+	const result = await getPool().query(`DELETE FROM trivia WHERE id = $1`, [id]);
 	return (result.rowCount ?? 0) > 0;
 }
 
 export async function getTriviaCount(): Promise<number> {
-	const { rows } = await sql`SELECT COUNT(*) as count FROM trivia`;
+	const { rows } = await getPool().query(`SELECT COUNT(*) as count FROM trivia`);
 	return parseInt(rows[0].count, 10);
 }

@@ -7,7 +7,14 @@ export const load: PageServerLoad = async () => {
 	let dbEntries: TriviaEntry[] = [];
 	let dbConnected = false;
 
-	if (env.POSTGRES_URL) {
+	const postgresUrl = env.POSTGRES_URL ?? env.DATABASE_URL;
+
+	// `pg` reads from process.env.POSTGRES_URL in practice; mirror from SvelteKit env.
+	if (postgresUrl) {
+		process.env.POSTGRES_URL = postgresUrl;
+	}
+
+	if (postgresUrl) {
 		try {
 			await initializeDatabase();
 			dbEntries = await getAllDbTrivia();
